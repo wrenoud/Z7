@@ -2,6 +2,7 @@
 #define Z7_LIBRARY_H
 
 #include <cstdint>
+#include <random>
 #if defined(_MSC_VER)
 #include <intrin.h>
 #endif
@@ -84,30 +85,30 @@ struct Z7Index {
 } // namespace Z7
 
 inline constexpr Z7::Z7Index operator""_Z7(const char *str) {
-    Z7::Z7Index v;
+    Z7::Z7Index v{std::numeric_limits<uint64_t>::max()};
     const char *p = str;
     if (*p != '\0') v.hierarchy.base = (*p - '0') * 10, ++p;
     if (*p != '\0') v.hierarchy.base += (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i01 = (*p - '0'), ++p; else v.hierarchy.i01 = 0b111;
-    if (*p != '\0') v.hierarchy.i02 = (*p - '0'), ++p; else v.hierarchy.i02 = 0b111;
-    if (*p != '\0') v.hierarchy.i03 = (*p - '0'), ++p; else v.hierarchy.i03 = 0b111;
-    if (*p != '\0') v.hierarchy.i04 = (*p - '0'), ++p; else v.hierarchy.i04 = 0b111;
-    if (*p != '\0') v.hierarchy.i05 = (*p - '0'), ++p; else v.hierarchy.i05 = 0b111;
-    if (*p != '\0') v.hierarchy.i06 = (*p - '0'), ++p; else v.hierarchy.i06 = 0b111;
-    if (*p != '\0') v.hierarchy.i07 = (*p - '0'), ++p; else v.hierarchy.i07 = 0b111;
-    if (*p != '\0') v.hierarchy.i08 = (*p - '0'), ++p; else v.hierarchy.i08 = 0b111;
-    if (*p != '\0') v.hierarchy.i09 = (*p - '0'), ++p; else v.hierarchy.i09 = 0b111;
-    if (*p != '\0') v.hierarchy.i10 = (*p - '0'), ++p; else v.hierarchy.i10 = 0b111;
-    if (*p != '\0') v.hierarchy.i11 = (*p - '0'), ++p; else v.hierarchy.i11 = 0b111;
-    if (*p != '\0') v.hierarchy.i12 = (*p - '0'), ++p; else v.hierarchy.i12 = 0b111;
-    if (*p != '\0') v.hierarchy.i13 = (*p - '0'), ++p; else v.hierarchy.i13 = 0b111;
-    if (*p != '\0') v.hierarchy.i14 = (*p - '0'), ++p; else v.hierarchy.i14 = 0b111;
-    if (*p != '\0') v.hierarchy.i15 = (*p - '0'), ++p; else v.hierarchy.i15 = 0b111;
-    if (*p != '\0') v.hierarchy.i16 = (*p - '0'), ++p; else v.hierarchy.i16 = 0b111;
-    if (*p != '\0') v.hierarchy.i17 = (*p - '0'), ++p; else v.hierarchy.i17 = 0b111;
-    if (*p != '\0') v.hierarchy.i18 = (*p - '0'), ++p; else v.hierarchy.i18 = 0b111;
-    if (*p != '\0') v.hierarchy.i19 = (*p - '0'), ++p; else v.hierarchy.i19 = 0b111;
-    if (*p != '\0') v.hierarchy.i20 = (*p - '0'), ++p; else v.hierarchy.i20 = 0b111;
+    if (*p != '\0') v.hierarchy.i01 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i02 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i03 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i04 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i05 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i06 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i07 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i08 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i09 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i10 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i11 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i12 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i13 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i14 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i15 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i16 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i17 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i18 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i19 = (*p - '0'), ++p;
+    if (*p != '\0') v.hierarchy.i20 = (*p - '0'), ++p;
 
     return v;
 }
