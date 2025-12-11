@@ -87,6 +87,8 @@ struct Z7Index {
 inline constexpr Z7::Z7Index operator""_Z7(const char *str, std::size_t) {
     Z7::Z7Index v{std::numeric_limits<uint64_t>::max()};
     const char *p = str;
+
+    // clang-format off
     if (*p != '\0') v.hierarchy.base = (*p - '0') * 10, ++p;
     if (*p != '\0') v.hierarchy.base += (*p - '0'), ++p;
     if (*p != '\0') v.hierarchy.i01 = (*p - '0'), ++p;
@@ -109,6 +111,7 @@ inline constexpr Z7::Z7Index operator""_Z7(const char *str, std::size_t) {
     if (*p != '\0') v.hierarchy.i18 = (*p - '0'), ++p;
     if (*p != '\0') v.hierarchy.i19 = (*p - '0'), ++p;
     if (*p != '\0') v.hierarchy.i20 = (*p - '0'), ++p;
+    // clang-format on
 
     return v;
 }
