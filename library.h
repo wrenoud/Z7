@@ -84,7 +84,7 @@ struct Z7Index {
 
 } // namespace Z7
 
-inline constexpr Z7::Z7Index operator""_Z7(const char *str) {
+inline constexpr Z7::Z7Index operator""_Z7(const char *str, std::size_t) {
     Z7::Z7Index v{std::numeric_limits<uint64_t>::max()};
     const char *p = str;
     if (*p != '\0') v.hierarchy.base = (*p - '0') * 10, ++p;

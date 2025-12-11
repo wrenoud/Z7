@@ -4,7 +4,7 @@
 
 // Demonstrate some basic assertions.
 TEST(Z7Index, UserLiteral) {
-    const auto index = 1111_Z7;
+    const auto index = "1111"_Z7;
 
     EXPECT_EQ(index.hierarchy.base, 11);
     EXPECT_EQ(index.hierarchy.i01, 1);
@@ -14,7 +14,7 @@ TEST(Z7Index, UserLiteral) {
 }
 
 TEST(Z7Index, BrackerOperatorReadAccess) {
-    const auto index = 0222_Z7;
+    const auto index = "0222"_Z7;
 
     EXPECT_EQ(index[0], 2);
     EXPECT_EQ(index[1], 2);
@@ -36,23 +36,23 @@ TEST(Z7Index, BrackerOperatorWriteAccess) {
 
 TEST(Z7Index, Resolution) {
     {
-        const auto index = 0012_Z7;
+        const auto index = "0012"_Z7;
         EXPECT_EQ(index.resolution(), 2);
     }
     {
-        const auto index = 00123_Z7;
+        const auto index = "00123"_Z7;
         EXPECT_EQ(index.resolution(), 3);
     }
     {
-        const auto index = 001234_Z7;
+        const auto index = "001234"_Z7;
         EXPECT_EQ(index.resolution(), 4);
     }
     {
-        const auto index = 00123456777_Z7;
+        const auto index = "00123456777"_Z7;
         EXPECT_EQ(index.resolution(), 6);
     }
     {
-        const auto index = 0012345601234560123456_Z7;
+        const auto index = "0012345601234560123456"_Z7;
         EXPECT_EQ(index.resolution(), 20);
     }
 }
