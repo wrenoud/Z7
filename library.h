@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <random>
+#include <string>
 #if defined(_MSC_VER)
 #include <intrin.h>
 #endif
@@ -54,6 +55,10 @@ struct Z7Index {
 
     constexpr explicit Z7Index(uint64_t idx) : index(idx) {}
 
+    // maybe there is a better way to do it.
+    // not used yet, but we should use it.
+    constexpr static Z7Index invalid() { return Z7Index{std::numeric_limits<uint64_t>::max()}; }
+
     // Calculate the bit shift needed to extract the 3-bit value for a given resolution.
     static constexpr uint64_t resolution_shift(uint64_t res) { return (20 - res) * 3; }
 
@@ -62,7 +67,8 @@ struct Z7Index {
 
     struct ResolutionProxy {
         uint64_t &index;
-        uint64_t resolution_shift; ///< Bit shift for the specified resolution. This is a multiple of 3, and is in effect a relative offset for the 3 bits.
+        uint64_t resolution_shift; ///< Bit shift for the specified resolution. This is a multiple of 3, and is in
+                                   ///< effect a relative offset for the 3 bits.
 
         // Assign a new 3-bit value for the specified resolution.
         constexpr ResolutionProxy &operator=(uint64_t value) {
@@ -79,8 +85,16 @@ struct Z7Index {
 
     // Determine the resolution based on the index. Because unused hierarchy levels are filled, we look for the first
     // zero.
-    constexpr int resolution() const { return 20 - ((Utils::bit_width(~index & -~index) - 1) / 3); }
+    constexpr int resolution() const {
+        return hierarchy.i01 == 7 ? 0 : 20 - ((Utils::bit_width(~index & -~index) - 1) / 3);
+    }
+
+    constexpr bool operator==(const Z7Index &rhs) const { return index == rhs.index; }
+    std::string str() const;
 };
+
+Z7Index operator+(const Z7Index &a, const Z7Index &b);
+Z7Index operator-(const Z7Index &a);
 
 } // namespace Z7
 
