@@ -25,7 +25,7 @@ constexpr int bit_width(uint64_t x) {
 } // namespace Utils
 struct Z7Index {
     union {
-        uint64_t index;
+        uint64_t index = 0;
         struct {
             uint64_t i20 : 3; // 3 bits
             uint64_t i19 : 3; // 6 bits
@@ -51,9 +51,14 @@ struct Z7Index {
         } hierarchy;
     };
 
-    constexpr Z7Index() : index(0) {}
+    constexpr Z7Index() {}
 
     constexpr explicit Z7Index(uint64_t idx) : index(idx) {}
+    constexpr Z7Index(const Z7Index& other) : index(other.index) {}
+    constexpr Z7Index(Z7Index&& other) noexcept : index(other.index) {}
+
+    constexpr Z7Index& operator=(const Z7Index& other) { index = other.index; return *this; }
+    constexpr Z7Index& operator=(Z7Index&& other) noexcept { index = other.index; return *this; }
 
     // maybe there is a better way to do it.
     // not used yet, but we should use it.
