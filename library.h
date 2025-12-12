@@ -1,28 +1,14 @@
 #ifndef Z7_LIBRARY_H
 #define Z7_LIBRARY_H
 
-#include <cstdint>
+#include "util.h"
+
 #include <random>
 #include <string>
-#if defined(_MSC_VER)
-#include <intrin.h>
-#endif
+
 
 namespace Z7 {
 
-namespace Utils {
-constexpr int bit_width(uint64_t x) {
-    if (x == 0)
-        return 0;
-#if defined(_MSC_VER)
-    unsigned long index = 0;
-    _BitScanReverse64(&index, x);
-    return static_cast<int>(index) + 1;
-#else
-    return 64 - __builtin_clzll(x);
-#endif
-}
-} // namespace Utils
 struct Z7Index {
     union {
         uint64_t index = 0;
