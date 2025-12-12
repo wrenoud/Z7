@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "library.h"
+#include "../library.h"
 
 // Demonstrate some basic assertions.
 TEST(Z7Index, UserLiteral) {
