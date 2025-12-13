@@ -1,6 +1,7 @@
 #ifndef Z7_UTIL_H
 #define Z7_UTIL_H
 
+#include <cstddef>
 #include <cstdint>
 #if __cplusplus >= 202002L
 #include <bit>
