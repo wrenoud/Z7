@@ -64,7 +64,8 @@ Z7Index operator+(const Z7Index &a, const Z7Index &b) {
         if (r1 != 0) {
             carries_next[carries_next.resolution() + 1] = r1;
         }
-        for (int c = 1; c <= carries_prev.resolution(); c++) {
+        const auto carry_count = carries_prev.resolution();
+        for (int c = 1; c <= carry_count; c++) {
             const auto carry = carries_prev[c];
             r1 = addition_table_1[r0][carry];
             r0 = mod_7_table[r0 + carry];
