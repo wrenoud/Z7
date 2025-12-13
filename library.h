@@ -3,11 +3,17 @@
 
 #include "util.h"
 
+#include <array>
 #include <random>
 #include <string>
 
 
 namespace Z7 {
+
+
+struct Z7Configuration {
+    std::array<uint8_t, 16> exclusion_zone{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6};
+};
 
 struct Z7Index {
     union {
@@ -87,6 +93,7 @@ struct Z7Index {
 Z7Index operator+(const Z7Index &a, const Z7Index &b);
 Z7Index operator-(const Z7Index &a);
 
+std::array<Z7Index, 6> neighbors(const Z7Index& ref, const Z7Configuration& config);
 } // namespace Z7
 
 inline constexpr Z7::Z7Index operator""_Z7(const char *str, std::size_t) {

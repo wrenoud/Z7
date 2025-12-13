@@ -182,3 +182,25 @@ TEST(Z7Index, addition_with_carries) {
         EXPECT_TRUE(res == r);
     }
 }
+
+TEST(Z7Index, neighbors) {
+    const auto a = "0800433"_Z7;
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("0800026"_Z7, neig[0]);
+    EXPECT_EQ("0800244"_Z7, neig[1]);
+    EXPECT_EQ("0800022"_Z7, neig[2]);
+    EXPECT_EQ("0800430"_Z7, neig[3]);
+    EXPECT_EQ("0800431"_Z7, neig[4]);
+    EXPECT_EQ("0800432"_Z7, neig[5]);
+}
+
+TEST(Z7Index, neighbors_pentagon) {
+    const auto a = "0800"_Z7;
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("0801"_Z7, neig[0]);
+    EXPECT_EQ("0802"_Z7, neig[1]);
+    EXPECT_EQ("0803"_Z7, neig[2]);
+    EXPECT_EQ("0804"_Z7, neig[3]);
+    EXPECT_EQ("0805"_Z7, neig[4]);
+    EXPECT_EQ(Z7::Z7Index::invalid(), neig[5]);
+}

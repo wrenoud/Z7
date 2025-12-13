@@ -85,4 +85,83 @@ Z7Index operator+(const Z7Index &a, const Z7Index &b) {
     }
     return res;
 }
+
+constexpr static inline int first_non_zero(Z7Index f) {
+    if (f.hierarchy.i01 == 7)
+        return -1;
+    // This can be done with bit arithmetics.
+    int i = 1;
+    for (; i <= 20; i++) {
+        if (*f[i] != 0)
+            break;
+    }
+    return i;
+};
+
+std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &config) {
+    constexpr uint8_t size = 6;
+    std::array<Z7Index, size> result;
+    result.fill(Z7Index::invalid());
+
+    const auto resolution = ref.resolution();
+    const auto exclusion = config.exclusion_zone[ref.hierarchy.base];
+
+    // base only
+    if (ref.hierarchy.i01 == 7) {
+        // this is a special case. The return depends on the config data.
+        // TODO
+        return result;
+    }
+
+    // create the neigbors
+    {
+        Z7Index direction;
+        direction.hierarchy.base = ref.hierarchy.base;
+        for (int pos = resolution; pos < 20; pos++)
+            direction[pos + 1] = 7; // maybe we can do it without a loop.
+
+        for (uint8_t i = 0; i < size; i++) {
+            direction[resolution] = i + 1;
+            result[i] = ref + direction;
+        }
+    }
+
+    // if we are in a penthagon we invalidate one neighbor here.
+    const uint64_t data_only = (ref.index & ~(0b1111ULL << (20 * 3))) >> (3 * (20 - resolution));
+    if (data_only == 0 && exclusion > 0 && exclusion <= 6) {
+        result[exclusion - 1] = Z7Index::invalid();
+        return result;
+    }
+
+
+    // move points out of the exclusion zone
+    const auto ref_first_non_zero = first_non_zero(ref);
+    if (ref_first_non_zero < 1)
+        return result; // TODO here we should move to a different face in the dodecahedron, probably earlier in the
+                       // code.
+
+    // find out how we should rotate the cells if needed
+    const auto reference_zone = ref[ref_first_non_zero];
+    uint8_t multiplier = 0;
+    if ((reference_zone * 5) % 7 == exclusion) {
+        multiplier = 5; // rotate counterclockwise
+    } else if ((reference_zone * 3) % 7 == exclusion) {
+        multiplier = 3; // rotate clockwise
+    }
+
+    // rotate needed cells
+    if (multiplier > 0) {
+        for (auto &elem: result) {
+            const auto to_rotate = first_non_zero(elem);
+            if (*elem[to_rotate] == exclusion) {
+                for (int i = to_rotate; i <= elem.resolution(); i++) {
+                    elem[i] = (*elem[i] * multiplier) % 7;
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 } // namespace Z7
