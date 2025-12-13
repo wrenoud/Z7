@@ -26,6 +26,24 @@ constexpr int bit_width(uint64_t x) {
     return 64 - __builtin_clzll(x);
 #endif
 }
+
+constexpr size_t countl_zero(uint64_t x) {
+    // For multiple reasons we need to handle zero explicitly.
+    if (x == 0)
+        return 64;
+#if __cplusplus >= 202002L
+    // Use the standard library function if available.
+    return std::countl_zero(x);
+#elif defined(_MSC_VER)
+    // Fallback to MSVC intrinsic if available.
+    unsigned long index = 0;
+    _BitScanReverse64(&index, x);
+    return 63 - index;
+#else
+    // Fallback to GCC/Clang built-in function.
+    return __builtin_clzll(x);
+#endif
+}
 } // namespace Z7::Utils
 
 #endif // Z7_UTIL_H
