@@ -44,6 +44,29 @@ constexpr size_t countl_zero(uint64_t x) {
     return __builtin_clzll(x);
 #endif
 }
+
+constexpr size_t countr_zero(uint64_t x) {
+    // For multiple reasons we need to handle zero explicitly.
+    if (x == 0)
+        return 64;
+#if __cplusplus >= 202002L
+    // Use the standard library function if available.
+    return std::countr_zero(x);
+#elif defined(_MSC_VER)
+    // Fallback to MSVC intrinsic if available.
+    unsigned long index = 0;
+    _BitScanForward64(&index, x);
+    return index;
+#else
+    // Fallback to GCC/Clang built-in function.
+    return __builtin_ctzll(x);
+#endif
+}
+
+constexpr size_t countr_one(uint64_t x) {
+    return countr_zero(~x);
+}
+
 } // namespace Z7::Utils
 
 #endif // Z7_UTIL_H

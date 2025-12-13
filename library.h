@@ -77,7 +77,7 @@ struct Z7Index {
     // Determine the resolution based on the index. Because unused hierarchy levels are filled, we look for the first
     // zero.
     constexpr int resolution() const {
-        return hierarchy.i01 == 7 ? 0 : 20 - ((Utils::bit_width(~index & -~index) - 1) / 3);
+        return hierarchy.i01 == 7 ? 0 : 20 - (Utils::countr_one(index) / 3);
     }
 
     constexpr bool operator==(const Z7Index &rhs) const { return index == rhs.index; }
