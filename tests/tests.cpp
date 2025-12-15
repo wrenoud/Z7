@@ -183,6 +183,14 @@ TEST(Z7Index, addition_with_carries) {
     }
 }
 
+TEST(Z7Index, first_non_zero) {
+    EXPECT_EQ(6, first_non_zero("0000000"_Z7));
+    EXPECT_EQ(6, first_non_zero("1000000"_Z7));
+    EXPECT_EQ(1, first_non_zero("1234000"_Z7));
+    EXPECT_EQ(3, first_non_zero("1200567"_Z7));
+    EXPECT_EQ(0, first_non_zero("1277777"_Z7));
+}
+
 TEST(Z7Index, neighbors) {
     const auto a = "0800433"_Z7;
     const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});

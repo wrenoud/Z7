@@ -93,6 +93,8 @@ struct Z7Index {
 Z7Index operator+(const Z7Index &a, const Z7Index &b);
 Z7Index operator-(const Z7Index &a);
 
+constexpr size_t first_non_zero(const Z7Index& f);
+
 std::array<Z7Index, 6> neighbors(const Z7Index& ref, const Z7Configuration& config);
 } // namespace Z7
 
