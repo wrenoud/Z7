@@ -85,6 +85,7 @@ Z7Index operator+(const Z7Index &a, const Z7Index &b) {
 // Because we're adding a single known digit we can optimize the addition. This is just a very specific case of above.
 template<size_t N>
 Z7Index neighbor(const Z7Index &ref, size_t resolution) {
+    static_assert(0 < N && N < 7, "N must be in 1..6");
     Z7Index res{ref};
 
     // Add the direction digit.
