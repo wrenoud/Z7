@@ -2,12 +2,6 @@
 
 #include "../library.h"
 
-namespace Z7 {
-void PrintTo(const Z7Index& index, std::ostream* os) {
-    *os << index.str();
-}
-}
-
 // Demonstrate some basic assertions.
 TEST(Z7Index, UserLiteral) {
     const auto index = "1111"_Z7;
@@ -209,12 +203,12 @@ TEST(Z7Index, neighbor) {
 TEST(Z7Index, neighbors) {
     const auto a = "0800433"_Z7;
     const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
-    EXPECT_EQ("0800433"_Z7 + "0800001"_Z7, neig[0]);
-    EXPECT_EQ("0800433"_Z7 + "0800002"_Z7, neig[1]);
-    EXPECT_EQ("0800433"_Z7 + "0800003"_Z7, neig[2]);
-    EXPECT_EQ("0800433"_Z7 + "0800004"_Z7, neig[3]);
-    EXPECT_EQ("0800433"_Z7 + "0800005"_Z7, neig[4]);
-    EXPECT_EQ("0800433"_Z7 + "0800006"_Z7, neig[5]);
+    EXPECT_EQ("0800026"_Z7, neig[0]);
+    EXPECT_EQ("0800244"_Z7, neig[1]);
+    EXPECT_EQ("0800022"_Z7, neig[2]);
+    EXPECT_EQ("0800430"_Z7, neig[3]);
+    EXPECT_EQ("0800431"_Z7, neig[4]);
+    EXPECT_EQ("0800432"_Z7, neig[5]);
 }
 
 TEST(Z7Index, neighbors_pentagon) {
