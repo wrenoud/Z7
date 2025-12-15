@@ -96,6 +96,17 @@ Z7Index operator-(const Z7Index &a);
 constexpr size_t first_non_zero(const Z7Index& f);
 
 std::array<Z7Index, 6> neighbors(const Z7Index& ref, const Z7Configuration& config);
+
+template <size_t N>
+Z7Index neighbor(const Z7Index& ref, size_t resolution);
+
+extern template Z7Index neighbor<1>(const Z7Index& ref, size_t resolution);
+extern template Z7Index neighbor<2>(const Z7Index& ref, size_t resolution);
+extern template Z7Index neighbor<3>(const Z7Index& ref, size_t resolution);
+extern template Z7Index neighbor<4>(const Z7Index& ref, size_t resolution);
+extern template Z7Index neighbor<5>(const Z7Index& ref, size_t resolution);
+extern template Z7Index neighbor<6>(const Z7Index& ref, size_t resolution);
+
 } // namespace Z7
 
 inline constexpr Z7::Z7Index operator""_Z7(const char *str, std::size_t) {

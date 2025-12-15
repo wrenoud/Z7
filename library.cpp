@@ -82,6 +82,41 @@ Z7Index operator+(const Z7Index &a, const Z7Index &b) {
     return res;
 }
 
+// Because we're adding a single known digit we can optimize the addition. This is just a very specific case of above.
+template<size_t N>
+Z7Index neighbor(const Z7Index &ref, size_t resolution) {
+    Z7Index res{ref};
+
+    // Add the direction digit.
+    const auto v = ref[resolution];
+    res[resolution] = mod_7_table[v + N];
+    auto carry = addition_table_1[v][N];
+    if (carry == 0)
+        return res;
+
+    // Propagate the carry.
+    for (auto i = --resolution; i > 0; --i) {
+        const auto v = ref[i];
+        res[i] = mod_7_table[v + carry];
+        carry = addition_table_1[v][carry];
+        if (carry == 0)
+            return res;
+    }
+
+    // If we still have a carry after handling all digits then we're out of bounds.
+    if (carry != 0) {
+        return Z7Index(std::numeric_limits<uint64_t>::max());
+    }
+    return res;
+}
+
+template Z7Index neighbor<1>(const Z7Index& ref, size_t resolution);
+template Z7Index neighbor<2>(const Z7Index& ref, size_t resolution);
+template Z7Index neighbor<3>(const Z7Index& ref, size_t resolution);
+template Z7Index neighbor<4>(const Z7Index& ref, size_t resolution);
+template Z7Index neighbor<5>(const Z7Index& ref, size_t resolution);
+template Z7Index neighbor<6>(const Z7Index& ref, size_t resolution);
+
 constexpr size_t first_non_zero(const Z7Index& f) {
     if (f.hierarchy.i01 == 7)
         return 0;

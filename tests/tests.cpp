@@ -197,6 +197,15 @@ TEST(Z7Index, first_non_zero) {
     EXPECT_EQ(0, first_non_zero("1277777"_Z7));
 }
 
+TEST(Z7Index, neighbor) {
+    EXPECT_EQ("0800064"_Z7, Z7::neighbor<1>("0800433"_Z7, 5));
+    EXPECT_EQ("0800655"_Z7, Z7::neighbor<2>("0800433"_Z7, 5));
+    EXPECT_EQ("0800066"_Z7, Z7::neighbor<3>("0800433"_Z7, 5));
+    EXPECT_EQ("0800430"_Z7, Z7::neighbor<4>("0800433"_Z7, 5));
+    EXPECT_EQ("0800431"_Z7, Z7::neighbor<5>("0800433"_Z7, 5));
+    EXPECT_EQ("0800432"_Z7, Z7::neighbor<6>("0800433"_Z7, 5));
+}
+
 TEST(Z7Index, neighbors) {
     const auto a = "0800433"_Z7;
     const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
