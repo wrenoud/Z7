@@ -128,8 +128,6 @@ constexpr size_t first_non_zero(const Z7Index& f) {
 
 std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &config) {
     constexpr uint8_t size = 6;
-    std::array<Z7Index, size> result;
-    result.fill(Z7Index::invalid());
 
     const auto resolution = ref.resolution();
     const auto exclusion = config.exclusion_zone[ref.hierarchy.base];
@@ -138,21 +136,15 @@ std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &conf
     if (ref.hierarchy.i01 == 7) {
         // this is a special case. The return depends on the config data.
         // TODO
+        std::array<Z7Index, size> result;
+        result.fill(Z7Index::invalid());
         return result;
     }
 
     // create the neigbors
-    {
-        Z7Index direction;
-        direction.hierarchy.base = ref.hierarchy.base;
-        for (int pos = resolution; pos < 20; pos++)
-            direction[pos + 1] = 7; // maybe we can do it without a loop.
-
-        for (uint8_t i = 0; i < size; i++) {
-            direction[resolution] = i + 1;
-            result[i] = ref + direction;
-        }
-    }
+    std::array<Z7Index, size> result = {neighbor<1>(ref, resolution), neighbor<2>(ref, resolution),
+                                        neighbor<3>(ref, resolution), neighbor<4>(ref, resolution),
+                                        neighbor<5>(ref, resolution), neighbor<6>(ref, resolution)};
 
     // if we are in a penthagon we invalidate one neighbor here.
     const uint64_t data_only = (ref.index & ~(0b1111ULL << (20 * 3))) >> (3 * (20 - resolution));
