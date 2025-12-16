@@ -88,6 +88,31 @@ struct Z7Index {
 
     constexpr bool operator==(const Z7Index &rhs) const { return index == rhs.index; }
     std::string str() const;
+
+    // Pre-increment operator, follows the space filling curve order.
+    constexpr Z7Index &operator++() noexcept {
+        auto i = resolution();
+        if (i == 0) {
+            *this = invalid();
+            return *this;
+        }
+        uint64_t value = 0;
+        do {
+            value = const_cast<const Z7Index &>(*this)[i] + 1;
+            if (value == 7 && i > 1)
+                (*this)[i] = 0;
+            else
+                (*this)[i] = value;
+        } while (--i, value == 7 && i > 0);
+        return *this;
+    }
+
+    // Post-increment operator, follows the space filling curve order.
+    constexpr Z7Index operator++(int) noexcept {
+        auto current = *this;
+        ++(*this);
+        return current;
+    }
 };
 
 Z7Index operator+(const Z7Index &a, const Z7Index &b);
