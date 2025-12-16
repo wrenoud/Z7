@@ -2,6 +2,12 @@
 
 #include "../library.h"
 
+namespace Z7 {
+void PrintTo(const Z7Index& index, std::ostream* os) {
+    *os << index.str();
+}
+}
+
 // Demonstrate some basic assertions.
 TEST(Z7Index, UserLiteral) {
     const auto index = "1111"_Z7;
