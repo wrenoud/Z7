@@ -93,7 +93,14 @@ struct Z7Index {
 Z7Index operator+(const Z7Index &a, const Z7Index &b);
 Z7Index operator-(const Z7Index &a);
 
-constexpr size_t first_non_zero(const Z7Index& f);
+constexpr size_t first_non_zero(const Z7Index &f) {
+    if (f.hierarchy.i01 == 7)
+        return 0;
+
+    // mask out the base and count leading zeros
+    constexpr uint64_t base_mask = ~(0b1111ULL << 60);
+    return (Utils::countl_zero(f.index & base_mask) - 4) / 3 + 1;
+}
 
 std::array<Z7Index, 6> neighbors(const Z7Index& ref, const Z7Configuration& config);
 

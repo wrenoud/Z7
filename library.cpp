@@ -2,23 +2,65 @@
 
 #include <array>
 #include <iostream>
+#include <tuple>
 #include <sstream>
 
 void hello() { std::cout << "Hello, World!" << std::endl; }
 
 // https://en.wikipedia.org/wiki/Generalized_balanced_ternary#Addition_table_2
 
-
-static constexpr std::array<uint8_t, 14> mod_7_table{0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 4, 5, 6};
+namespace GBT::Addition {
+namespace CW {
+constexpr std::array<std::array<uint8_t, 7>, 7> addition_table_0{{{0, 1, 2, 3, 4, 5, 6},
+                                                                  {1, 4, 3, 6, 5, 2, 0},
+                                                                  {2, 3, 1, 4, 6, 0, 5},
+                                                                  {3, 6, 4, 5, 0, 1, 2},
+                                                                  {4, 5, 6, 0, 2, 3, 1},
+                                                                  {5, 2, 0, 1, 3, 6, 4},
+                                                                  {6, 0, 5, 2, 1, 4, 3}}};
 
 // TODO - Should be defined with size 8 for memory padding?
-static constexpr std::array<std::array<uint8_t, 7>, 7> addition_table_1{{{0, 0, 0, 0, 0, 0, 0},
-                                                                      {0, 1, 0, 3, 0, 1, 0},
-                                                                      {0, 0, 2, 2, 0, 0, 6},
-                                                                      {0, 3, 2, 3, 0, 0, 0},
-                                                                      {0, 0, 0, 0, 4, 5, 4},
-                                                                      {0, 1, 0, 0, 5, 5, 0},
-                                                                      {0, 0, 6, 0, 4, 0, 6}}};
+constexpr std::array<std::array<uint8_t, 7>, 7> addition_table_1{{{0, 0, 0, 0, 0, 0, 0},
+                                                                  {0, 1, 0, 1, 0, 5, 0},
+                                                                  {0, 0, 2, 3, 0, 0, 2},
+                                                                  {0, 1, 3, 3, 0, 0, 0},
+                                                                  {0, 0, 0, 0, 4, 4, 6},
+                                                                  {0, 5, 0, 0, 4, 5, 0},
+                                                                  {0, 0, 2, 0, 6, 0, 6}}};
+
+constexpr std::pair<uint8_t, uint8_t> lookup(uint8_t a, uint8_t b) {
+    return {addition_table_1[a][b], addition_table_0[a][b]};
+}
+} // namespace CW
+
+namespace CCW {
+// constexpr std::array<std::array<uint8_t, 7>, 7> addition_table_0{{{0, 1, 2, 3, 4, 5, 6},
+//                                                                   {1, 2, 3, 4, 5, 6, 0},
+//                                                                   {2, 3, 4, 5, 6, 0, 1},
+//                                                                   {3, 4, 5, 6, 0, 1, 2},
+//                                                                   {4, 5, 6, 0, 1, 2, 3},
+//                                                                   {5, 6, 0, 1, 2, 3, 4},
+//                                                                   {6, 0, 1, 2, 3, 4, 5}}};
+
+// Instead of 2D array, we can just use mod 7 addition. So where we had addition_table_0[a][b],
+// we can instead do mod_7_table[a + b].
+constexpr std::array<uint8_t, 14> mod_7_table{0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 4, 5, 6};
+
+// TODO - Should be defined with size 8 for memory padding?
+constexpr std::array<std::array<uint8_t, 7>, 7> addition_table_1{{{0, 0, 0, 0, 0, 0, 0},
+                                                                  {0, 1, 0, 3, 0, 1, 0},
+                                                                  {0, 0, 2, 2, 0, 0, 6},
+                                                                  {0, 3, 2, 3, 0, 0, 0},
+                                                                  {0, 0, 0, 0, 4, 5, 4},
+                                                                  {0, 1, 0, 0, 5, 5, 0},
+                                                                  {0, 0, 6, 0, 4, 0, 6}}};
+
+constexpr std::pair<uint8_t, uint8_t> lookup(uint8_t a, uint8_t b) {
+    return {addition_table_1[a][b], mod_7_table[a + b]};
+}
+} // namespace CCW
+} // namespace GBT::Addition
+
 namespace Z7 {
 
 std::string Z7Index::str() const {
@@ -55,20 +97,26 @@ Z7Index operator+(const Z7Index &a, const Z7Index &b) {
     // use an index to store the carries.
     Z7Index carries_next{std::numeric_limits<uint64_t>::max()};
     for (int i = resolution; i >= 1; i--) {
+        const bool isEvenResolution = (i % 2 == 0);
         const Z7Index carries_prev(carries_next.index);
         carries_next = Z7Index(std::numeric_limits<uint64_t>::max());
         const auto va = a[i];
         const auto vb = b[i];
-        auto r1 = addition_table_1[va][vb];
-        auto r0 = mod_7_table[va + vb];
+        uint8_t r1, r0;
+        if (isEvenResolution)
+            std::tie(r1, r0) = GBT::Addition::CCW::lookup(va, vb);
+        else
+            std::tie(r1, r0) = GBT::Addition::CW::lookup(va, vb);
         if (r1 != 0) {
             carries_next[carries_next.resolution() + 1] = r1;
         }
         const auto carry_count = carries_prev.resolution();
         for (int c = 1; c <= carry_count; c++) {
             const auto carry = carries_prev[c];
-            r1 = addition_table_1[r0][carry];
-            r0 = mod_7_table[r0 + carry];
+            if (isEvenResolution)
+                std::tie(r1, r0) = GBT::Addition::CCW::lookup(r0, carry);
+            else
+                std::tie(r1, r0) = GBT::Addition::CW::lookup(r0, carry);
             if (r1 != 0) {
                 carries_next[carries_next.resolution() + 1] = r1;
             }
@@ -90,16 +138,24 @@ Z7Index neighbor(const Z7Index &ref, size_t resolution) {
 
     // Add the direction digit.
     const auto v = ref[resolution];
-    res[resolution] = mod_7_table[v + N];
-    auto carry = addition_table_1[v][N];
+    uint8_t carry;
+    uint8_t r0;
+    if (resolution % 2 == 0)
+        std::tie(carry, r0) = GBT::Addition::CCW::lookup(v, N);
+    else
+        std::tie(carry, r0) = GBT::Addition::CW::lookup(v, N);
+    res[resolution] = r0;
     if (carry == 0)
         return res;
 
     // Propagate the carry.
     for (auto i = --resolution; i > 0; --i) {
         const auto v = ref[i];
-        res[i] = mod_7_table[v + carry];
-        carry = addition_table_1[v][carry];
+        if (i % 2 == 0)
+            std::tie(carry, r0) = GBT::Addition::CCW::lookup(v, carry);
+        else
+            std::tie(carry, r0) = GBT::Addition::CW::lookup(v, carry);
+        res[i] = r0;
         if (carry == 0)
             return res;
     }
@@ -117,15 +173,6 @@ template Z7Index neighbor<3>(const Z7Index& ref, size_t resolution);
 template Z7Index neighbor<4>(const Z7Index& ref, size_t resolution);
 template Z7Index neighbor<5>(const Z7Index& ref, size_t resolution);
 template Z7Index neighbor<6>(const Z7Index& ref, size_t resolution);
-
-constexpr size_t first_non_zero(const Z7Index& f) {
-    if (f.hierarchy.i01 == 7)
-        return 0;
-
-    // mask out the base and count leading zeros
-    constexpr uint64_t base_mask = ~(0b1111ULL << 60);
-    return (Utils::countl_zero(f.index & base_mask) - 4) / 3 + 1;
-};
 
 std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &config) {
     constexpr uint8_t size = 6;

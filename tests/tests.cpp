@@ -41,30 +41,12 @@ TEST(Z7Index, BrackerOperatorWriteAccess) {
 }
 
 TEST(Z7Index, Resolution) {
-    {
-        const auto index = "00"_Z7;
-        EXPECT_EQ(index.resolution(), 0);
-    }
-    {
-        const auto index = "0012"_Z7;
-        EXPECT_EQ(index.resolution(), 2);
-    }
-    {
-        const auto index = "00123"_Z7;
-        EXPECT_EQ(index.resolution(), 3);
-    }
-    {
-        const auto index = "001234"_Z7;
-        EXPECT_EQ(index.resolution(), 4);
-    }
-    {
-        const auto index = "00123456777"_Z7;
-        EXPECT_EQ(index.resolution(), 6);
-    }
-    {
-        const auto index = "0012345601234560123456"_Z7;
-        EXPECT_EQ(index.resolution(), 20);
-    }
+    EXPECT_EQ("00"_Z7.resolution(), 0);
+    EXPECT_EQ("0012"_Z7.resolution(), 2);
+    EXPECT_EQ("00123"_Z7.resolution(), 3);
+    EXPECT_EQ("001234"_Z7.resolution(), 4);
+    EXPECT_EQ("00123456777"_Z7.resolution(), 6);
+    EXPECT_EQ("0012345601234560123456"_Z7.resolution(), 20);
 }
 
 TEST(Z7Index, str) {
@@ -91,10 +73,9 @@ TEST(Z7Index, addition_simple) {
         const auto a = "001201"_Z7;
         const auto b = "000002"_Z7;
         const Z7::Z7Index r = a + b;
-        const Z7::Z7Index res = "001203"_Z7;
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("001203"_Z7, r);
         const auto c = r + (-b);
-        EXPECT_TRUE(c == a);
+        EXPECT_EQ(c, a);
     }
 }
 
@@ -103,115 +84,109 @@ TEST(Z7Index, addition_with_carries) {
         const auto a = "08006666"_Z7;
         const auto b = "08003466"_Z7;
         const Z7::Z7Index r = a + b;
-        const Z7::Z7Index res = "08006245"_Z7;
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("08006225"_Z7, r);
         const auto c = r + (-b);
-        EXPECT_TRUE(c == a);
+        EXPECT_EQ(c, a);
     }
     {
         const auto a = "080016666"_Z7;
         const auto b = "080016466"_Z7;
         const Z7::Z7Index r = a + b;
-        const Z7::Z7Index res = "080162245"_Z7;
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("080014043"_Z7, r);
         const auto c = r + (-b);
-        EXPECT_TRUE(c == a);
+        EXPECT_EQ(c, a);
     }
     {
         const auto a = "080044"_Z7;
         const auto b = "080056"_Z7;
         const Z7::Z7Index r = a + b;
-        const Z7::Z7Index res = "080563"_Z7;
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("080403"_Z7, r);
         const auto c = r + (-b);
-        EXPECT_TRUE(c == a);
+        EXPECT_EQ(c, a);
     }
     {
         const auto a = "080153"_Z7;
         const auto b = "080045"_Z7;
         const Z7::Z7Index r = a + b;
-        const Z7::Z7Index res = "081621"_Z7;
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("080531"_Z7, r);
         const auto c = r + (-b);
-        EXPECT_TRUE(c == a);
+        EXPECT_EQ(c, a);
     }
     {
         const auto a = "080465"_Z7;
         const auto b = "080136"_Z7;
         const Z7::Z7Index r = a + b;
-        const Z7::Z7Index res = "080524"_Z7;
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("080524"_Z7, r);
         const auto c = r + (-b);
-        EXPECT_TRUE(c == a);
+        EXPECT_EQ(c, a);
     }
     {
         const auto a = "080465"_Z7;
         const auto b = "080251"_Z7;
         const Z7::Z7Index r = a + b;
-        const Z7::Z7Index res = "080656"_Z7;
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("080656"_Z7, r);
         const auto c = r + (-b);
-        EXPECT_TRUE(c == a);
+        EXPECT_EQ(c, a);
     }
     {
         const auto a = "0806666666666666666666"_Z7;
         EXPECT_EQ(20, a.resolution());
         const Z7::Z7Index r = a + a;
-        const Z7::Z7Index res = "0864444444444444444445"_Z7;
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("0864242424242424242425"_Z7, r);
         const auto c = r + (-a);
-        EXPECT_TRUE(c == a);
+        EXPECT_EQ(c, a);
     }
     {
         const auto a = "0846666666666666666666"_Z7;
         const auto b = "0816666666666666666666"_Z7;
         EXPECT_EQ(20, a.resolution());
         const Z7::Z7Index r = a + b;
-        const Z7::Z7Index res = "0844444444444444444445"_Z7;
         EXPECT_EQ(20, r.resolution());
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("0844242424242424242425"_Z7, r);
         const auto c = r + (-b);
-        EXPECT_TRUE(c == "15"_Z7);
+        EXPECT_EQ("15"_Z7, c); // invalid
     }
     {
         const auto a = "0866666666666666666666"_Z7;
         EXPECT_EQ(20, a.resolution());
         const Z7::Z7Index r = a + a;
-        const Z7::Z7Index res = "15"_Z7; // invalid
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("15"_Z7, r); // invalid
     }
     {
         const auto a = "0816666"_Z7;
         const auto b = "0816466"_Z7;
         const Z7::Z7Index r = a + b;
-        const Z7::Z7Index res = "15"_Z7; // invalid
-        EXPECT_TRUE(res == r);
+        EXPECT_EQ("15"_Z7, r); // invalid
     }
 }
 
 TEST(Z7Index, first_non_zero) {
-    EXPECT_EQ(6, first_non_zero("0000000"_Z7));
-    EXPECT_EQ(6, first_non_zero("1000000"_Z7));
-    EXPECT_EQ(1, first_non_zero("1234000"_Z7));
-    EXPECT_EQ(3, first_non_zero("1200567"_Z7));
-    EXPECT_EQ(0, first_non_zero("1277777"_Z7));
+    EXPECT_EQ(6, Z7::first_non_zero("0000000"_Z7));
+    EXPECT_EQ(6, Z7::first_non_zero("1000000"_Z7));
+    EXPECT_EQ(1, Z7::first_non_zero("1234000"_Z7));
+    EXPECT_EQ(3, Z7::first_non_zero("1200567"_Z7));
+    EXPECT_EQ(0, Z7::first_non_zero("1277777"_Z7));
 }
 
 TEST(Z7Index, neighbor) {
-    EXPECT_EQ("0800064"_Z7, Z7::neighbor<1>("0800433"_Z7, 5));
-    EXPECT_EQ("0800655"_Z7, Z7::neighbor<2>("0800433"_Z7, 5));
-    EXPECT_EQ("0800066"_Z7, Z7::neighbor<3>("0800433"_Z7, 5));
+    EXPECT_EQ("0800046"_Z7, Z7::neighbor<1>("0800433"_Z7, 5));
+    EXPECT_EQ("0800064"_Z7, Z7::neighbor<2>("0800433"_Z7, 5));
+    EXPECT_EQ("0800065"_Z7, Z7::neighbor<3>("0800433"_Z7, 5));
     EXPECT_EQ("0800430"_Z7, Z7::neighbor<4>("0800433"_Z7, 5));
     EXPECT_EQ("0800431"_Z7, Z7::neighbor<5>("0800433"_Z7, 5));
     EXPECT_EQ("0800432"_Z7, Z7::neighbor<6>("0800433"_Z7, 5));
+
+    EXPECT_EQ("0006464460645425020"_Z7, Z7::neighbor<1>("0006464460645425026"_Z7, 17));
+    EXPECT_EQ("0006464460645425245"_Z7, Z7::neighbor<2>("0006464460645425026"_Z7, 17));
+    EXPECT_EQ("0006464460645425022"_Z7, Z7::neighbor<3>("0006464460645425026"_Z7, 17));
 }
 
 TEST(Z7Index, neighbors) {
     const auto a = "0800433"_Z7;
     const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
-    EXPECT_EQ("0800026"_Z7, neig[0]);
-    EXPECT_EQ("0800244"_Z7, neig[1]);
-    EXPECT_EQ("0800022"_Z7, neig[2]);
+    EXPECT_EQ("0800046"_Z7, neig[0]);
+    EXPECT_EQ("0800026"_Z7, neig[1]);
+    EXPECT_EQ("0800024"_Z7, neig[2]);
     EXPECT_EQ("0800430"_Z7, neig[3]);
     EXPECT_EQ("0800431"_Z7, neig[4]);
     EXPECT_EQ("0800432"_Z7, neig[5]);
