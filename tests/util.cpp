@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: © 2025 Javier Jimenez Shaw <https://github.com/jjimenezshaw>
+// SPDX-FileCopyrightText: © 2025 Weston James Renoud <https://github.com/wrenoud>
+
 #include <gtest/gtest.h>
 
 #include "../library.h"

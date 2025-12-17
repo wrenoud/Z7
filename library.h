@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: © 2025 Javier Jimenez Shaw <https://github.com/jjimenezshaw>
+// SPDX-FileCopyrightText: © 2025 Weston James Renoud <https://github.com/wrenoud>
+
 #ifndef Z7_LIBRARY_H
 #define Z7_LIBRARY_H
 
