@@ -195,6 +195,50 @@ TEST(Z7Index, neighbors) {
     EXPECT_EQ("0800432"_Z7, neig[5]);
 }
 
+TEST(Z7Index, neighbors_exclusion_zone_1) {
+    const auto a = "0800432"_Z7;
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("0800433"_Z7, neig[0]);
+    EXPECT_EQ("0800245"_Z7, neig[1]);
+    EXPECT_EQ("0800026"_Z7, neig[2]);
+    EXPECT_EQ("0800436"_Z7, neig[3]);
+    EXPECT_EQ("0800430"_Z7, neig[4]);
+    EXPECT_EQ("0800244"_Z7, neig[5]);
+}
+
+TEST(Z7Index, neighbors_exclusion_zone_2) {
+    const auto a = "0800024"_Z7;
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("0800025"_Z7, neig[0]);
+    EXPECT_EQ("0800026"_Z7, neig[1]);
+    EXPECT_EQ("0800020"_Z7, neig[2]);
+    EXPECT_EQ("0800046"_Z7, neig[3]);
+    EXPECT_EQ("0800042"_Z7, neig[4]);
+    EXPECT_EQ("0800433"_Z7, neig[5]);
+}
+
+TEST(Z7Index, neighbors_exclusion_zone_3) {
+    const auto a = "080043"_Z7;
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("080004"_Z7, neig[0]);
+    EXPECT_EQ("080024"_Z7, neig[1]);
+    EXPECT_EQ("080002"_Z7, neig[2]);
+    EXPECT_EQ("080040"_Z7, neig[3]);
+    EXPECT_EQ("080041"_Z7, neig[4]);
+    EXPECT_EQ("080042"_Z7, neig[5]);
+}
+
+TEST(Z7Index, neighbors_exclusion_zone_4) {
+    const auto a = "080002"_Z7;
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("080003"_Z7, neig[0]);
+    EXPECT_EQ("080024"_Z7, neig[1]);
+    EXPECT_EQ("080025"_Z7, neig[2]);
+    EXPECT_EQ("080004"_Z7, neig[3]);
+    EXPECT_EQ("080000"_Z7, neig[4]);
+    EXPECT_EQ("080043"_Z7, neig[5]);
+}
+
 TEST(Z7Index, neighbors_pentagon) {
     const auto a = "0800"_Z7;
     const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
