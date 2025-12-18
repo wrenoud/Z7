@@ -5,13 +5,9 @@ for aperature 7 hexagonal discrete global grid systems, as coined in [Kmoch et a
 Balanced Ternary (GBT) numeral system described in [Lucas, Gibson (1982)][6], [van Roessel (1988)][3],
 and [Wikipedia (2025)][1].
 
-<img style="float: left; margin: 0px 10px" src="grid.svg" width="200" alt="3 hierarchies in Z7's alternating GBT pattern">
-
 For reference purposes a rendering of three hierarchies of Z7's alternating GBT pattern is included (CW, CCW, CW).
 
-[Full Size](./grid.svg)
-
-<div style="clear: both;"></div>
+<img src="grid.svg" width="200" alt="3 hierarchies in Z7's alternating GBT pattern">
 
 ## References
 
