@@ -15,7 +15,7 @@ namespace Z7 {
 
 
 struct Z7Configuration {
-    std::array<uint8_t, 16> exclusion_zone{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6};
+    std::array<uint8_t, 12> exclusion_zone{2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5};
 };
 
 struct Z7Index {
