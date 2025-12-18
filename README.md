@@ -7,7 +7,14 @@ the Generalized Balanced Ternary (GBT) numeral system described in [Lucas, Gibso
 
 ### Rotation Pattern
 
-For reference purposes a rendering of three hierarchies of Z7's alternating GBT pattern is included (CW, CCW, CW).
+Lucas and Gibson (1982) gave examples of GBT with exclusively counter-clockwise (CCW) rotation. The disadvantage of this
+approach is that the orientation of the hexagons at the different hierarchy levels quickly diverge from each other.
+[White et al. (1992)][white1992] proposed an alternating rotation direction (CW, CCW, CW, ...) to maintain an alignment
+of hexagon
+orientations across hierarchy levels. Kmoch et al. (2025) adopted this alternating rotation pattern for Z7 assigning CW
+to odd resolutions and CCW to even resolutions.
+
+For reference purposes a rendering of three hierarchies of alternating GBT rotation is included (CW, CCW, CW).
 
 <img src="grid.svg" width="200" alt="3 hierarchies in Z7's alternating GBT pattern">
 
