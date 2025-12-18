@@ -18,11 +18,11 @@ For reference purposes a rendering of three hierarchies of Z7's alternating GBT 
    Research. https://apps.dtic.mil/sti/tr/pdf/ADA125710.pdf. (No. AFOSRTR830055).
 3. Sahr, K. (2011). [Hexagonal discrete global grid systems for geospatial computing][5]. _Archives of Photogrammetry
    Cartography and Remote Sensing, 22_, 363–376.
-4. van Roessel, J. W. (
-   1988). [Conversion of Cartesian coordinates from and to Generalized Balanced Ternary addresses][3]. _Photogrammetric
+4. van Roessel, J. W. (1988).
+   [Conversion of Cartesian coordinates from and to Generalized Balanced Ternary addresses][3]. _Photogrammetric
    Engineering & Remote Sensing, 54_(11), 1565–1570.
-5. White, D., Kimerling, J. A., & Overton, S. W. (
-   1992). [Cartographic and Geometric Components of a Global Sampling Design for Environmental Monitoring][4].
+5. White, D., Kimerling, J. A., & Overton, S. W. (1992).
+   [Cartographic and Geometric Components of a Global Sampling Design for Environmental Monitoring][4].
    _Cartography and Geographic Information Systems_, 19(1), 5-22. https://doi.org/10.1559/152304092783786636
 6. Wikipedia Contributors. (2025, December 16). [_Generalized balanced ternary_][1]. Wikipedia; Wikimedia Foundation.
 
