@@ -47,6 +47,39 @@ struct Z7Index {
     };
 
     constexpr Z7Index() {}
+    constexpr explicit Z7Index(const char *str)
+        : index(std::numeric_limits<uint64_t>::max())
+    {
+        const char *p = str;
+
+        // clang-format off
+        if (*p != '\0') hierarchy.base = (*p - '0') * 10, ++p;
+        if (*p != '\0') hierarchy.base += (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i01 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i02 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i03 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i04 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i05 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i06 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i07 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i08 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i09 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i10 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i11 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i12 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i13 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i14 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i15 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i16 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i17 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i18 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i19 = (*p - '0'), ++p;
+        if (*p != '\0') hierarchy.i20 = (*p - '0'), ++p;
+        // clang-format on
+    }
+    constexpr explicit Z7Index(std::string_view str)
+        : Z7Index(str.data())
+    {}
 
     constexpr explicit Z7Index(uint64_t idx) : index(idx) {}
     constexpr Z7Index(const Z7Index& other) : index(other.index) {}
@@ -146,35 +179,7 @@ extern template Z7Index neighbor<6>(const Z7Index& ref, size_t resolution);
 } // namespace Z7
 
 inline constexpr Z7::Z7Index operator""_Z7(const char *str, std::size_t) {
-    Z7::Z7Index v{std::numeric_limits<uint64_t>::max()};
-    const char *p = str;
-
-    // clang-format off
-    if (*p != '\0') v.hierarchy.base = (*p - '0') * 10, ++p;
-    if (*p != '\0') v.hierarchy.base += (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i01 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i02 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i03 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i04 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i05 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i06 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i07 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i08 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i09 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i10 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i11 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i12 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i13 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i14 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i15 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i16 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i17 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i18 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i19 = (*p - '0'), ++p;
-    if (*p != '\0') v.hierarchy.i20 = (*p - '0'), ++p;
-    // clang-format on
-
-    return v;
+    return Z7::Z7Index{str};
 }
 
 #endif // Z7_LIBRARY_H
