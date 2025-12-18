@@ -10,6 +10,7 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable( tests
+    neighbors.cpp
     tests.cpp
     util.cpp
 )

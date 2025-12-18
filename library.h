@@ -89,7 +89,8 @@ struct Z7Index {
         return hierarchy.i01 == 7 ? 0 : 20 - (Utils::countr_one(index) / 3);
     }
 
-    constexpr bool operator==(const Z7Index &rhs) const { return index == rhs.index; }
+    friend constexpr bool operator==(const Z7Index &lhs, const Z7Index &rhs) { return lhs.index == rhs.index; }
+    friend constexpr bool operator!=(const Z7Index &lhs, const Z7Index &rhs) { return lhs.index != rhs.index; }
     std::string str() const;
 
     // Pre-increment operator, follows the space filling curve order.
