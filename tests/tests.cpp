@@ -6,10 +6,8 @@
 #include "../library.h"
 
 namespace Z7 {
-void PrintTo(const Z7Index& index, std::ostream* os) {
-    *os << index.str();
-}
-}
+void PrintTo(const Z7Index &index, std::ostream *os) { *os << index.str(); }
+} // namespace Z7
 
 // Demonstrate some basic assertions.
 TEST(Z7Index, UserLiteral) {
@@ -185,57 +183,57 @@ TEST(Z7Index, neighbor) {
 }
 
 TEST(Z7Index, neighbors) {
-    const auto a = "0800433"_Z7;
-    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
-    EXPECT_EQ("0800046"_Z7, neig[0]);
-    EXPECT_EQ("0800026"_Z7, neig[1]);
-    EXPECT_EQ("0800024"_Z7, neig[2]);
-    EXPECT_EQ("0800430"_Z7, neig[3]);
-    EXPECT_EQ("0800431"_Z7, neig[4]);
-    EXPECT_EQ("0800432"_Z7, neig[5]);
-}
-
-TEST(Z7Index, neighbors_exclusion_zone_1) {
     const auto a = "0800432"_Z7;
     const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
     EXPECT_EQ("0800433"_Z7, neig[0]);
-    EXPECT_EQ("0800245"_Z7, neig[1]);
-    EXPECT_EQ("0800026"_Z7, neig[2]);
+    EXPECT_EQ("0800651"_Z7, neig[1]);
+    EXPECT_EQ("0800064"_Z7, neig[2]);
     EXPECT_EQ("0800436"_Z7, neig[3]);
     EXPECT_EQ("0800430"_Z7, neig[4]);
-    EXPECT_EQ("0800244"_Z7, neig[5]);
+    EXPECT_EQ("0800655"_Z7, neig[5]);
+}
+
+TEST(Z7Index, neighbors_exclusion_zone_1) {
+    const auto a = "0300613"_Z7;
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("0300032"_Z7, neig[0]);
+    EXPECT_EQ("0300366"_Z7, neig[1]);
+    EXPECT_EQ("0300364"_Z7, neig[2]);
+    EXPECT_EQ("0300610"_Z7, neig[3]);
+    EXPECT_EQ("0300611"_Z7, neig[4]);
+    EXPECT_EQ("0300612"_Z7, neig[5]);
 }
 
 TEST(Z7Index, neighbors_exclusion_zone_2) {
-    const auto a = "0800024"_Z7;
+    const auto a = "0300036"_Z7;
     const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
-    EXPECT_EQ("0800025"_Z7, neig[0]);
-    EXPECT_EQ("0800026"_Z7, neig[1]);
-    EXPECT_EQ("0800020"_Z7, neig[2]);
-    EXPECT_EQ("0800046"_Z7, neig[3]);
-    EXPECT_EQ("0800042"_Z7, neig[4]);
-    EXPECT_EQ("0800433"_Z7, neig[5]);
+    EXPECT_EQ("0300030"_Z7, neig[0]);
+    EXPECT_EQ("0300611"_Z7, neig[1]);
+    EXPECT_EQ("0300032"_Z7, neig[2]);
+    EXPECT_EQ("0300063"_Z7, neig[3]);
+    EXPECT_EQ("0300034"_Z7, neig[4]);
+    EXPECT_EQ("0300062"_Z7, neig[5]);
 }
 
 TEST(Z7Index, neighbors_exclusion_zone_3) {
-    const auto a = "080043"_Z7;
+    const auto a = "080041"_Z7;
     const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
-    EXPECT_EQ("080004"_Z7, neig[0]);
-    EXPECT_EQ("080024"_Z7, neig[1]);
-    EXPECT_EQ("080002"_Z7, neig[2]);
-    EXPECT_EQ("080040"_Z7, neig[3]);
-    EXPECT_EQ("080041"_Z7, neig[4]);
-    EXPECT_EQ("080042"_Z7, neig[5]);
+    EXPECT_EQ("080016"_Z7, neig[0]);
+    EXPECT_EQ("080043"_Z7, neig[1]);
+    EXPECT_EQ("080004"_Z7, neig[2]);
+    EXPECT_EQ("080045"_Z7, neig[3]);
+    EXPECT_EQ("080014"_Z7, neig[4]);
+    EXPECT_EQ("080040"_Z7, neig[5]);
 }
 
 TEST(Z7Index, neighbors_exclusion_zone_4) {
-    const auto a = "080002"_Z7;
+    const auto a = "080004"_Z7;
     const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
-    EXPECT_EQ("080003"_Z7, neig[0]);
-    EXPECT_EQ("080024"_Z7, neig[1]);
-    EXPECT_EQ("080025"_Z7, neig[2]);
-    EXPECT_EQ("080004"_Z7, neig[3]);
-    EXPECT_EQ("080000"_Z7, neig[4]);
+    EXPECT_EQ("080001"_Z7, neig[0]);
+    EXPECT_EQ("080006"_Z7, neig[1]);
+    EXPECT_EQ("080000"_Z7, neig[2]);
+    EXPECT_EQ("080041"_Z7, neig[3]);
+    EXPECT_EQ("080016"_Z7, neig[4]);
     EXPECT_EQ("080043"_Z7, neig[5]);
 }
 
@@ -246,6 +244,6 @@ TEST(Z7Index, neighbors_pentagon) {
     EXPECT_EQ("0802"_Z7, neig[1]);
     EXPECT_EQ("0803"_Z7, neig[2]);
     EXPECT_EQ("0804"_Z7, neig[3]);
-    EXPECT_EQ("0805"_Z7, neig[4]);
-    EXPECT_EQ(Z7::Z7Index::invalid(), neig[5]);
+    EXPECT_EQ(Z7::Z7Index::invalid(), neig[4]);
+    EXPECT_EQ("0806"_Z7, neig[5]);
 }
