@@ -16,6 +16,23 @@ namespace Z7 {
 
 struct Z7Configuration {
     std::array<uint8_t, 12> exclusion_zone{2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5};
+
+    // neighbor_zones
+    // first index: GBT direction (1-6)
+    // second index: source cell (the 12 pentagons)
+    // invalid value: 15 (must much the exclusion zone above)
+    std::array<std::array<uint8_t, 6>, 12> neighbor_zones{{{5, 15, 4, 2, 1, 3},
+                                                           {5, 15, 0, 6, 10, 2},
+                                                           {1, 15, 0, 7, 6, 3},
+                                                           {2, 15, 0, 8, 7, 4},
+                                                           {3, 15, 0, 9, 8, 5},
+                                                           {4, 15, 0, 10, 9, 1},
+                                                           {10, 2, 1, 11, 15, 7},
+                                                           {6, 3, 2, 11, 15, 8},
+                                                           {7, 4, 3, 11, 15, 9},
+                                                           {8, 5, 4, 11, 15, 10},
+                                                           {9, 1, 5, 11, 15, 6},
+                                                           {9, 6, 10, 8, 15, 7}}};
 };
 
 struct Z7Index {
@@ -47,9 +64,7 @@ struct Z7Index {
     };
 
     constexpr Z7Index() {}
-    constexpr explicit Z7Index(const char *str)
-        : index(std::numeric_limits<uint64_t>::max())
-    {
+    constexpr explicit Z7Index(const char *str) : index(std::numeric_limits<uint64_t>::max()) {
         const char *p = str;
 
         // clang-format off
@@ -77,16 +92,20 @@ struct Z7Index {
         if (*p != '\0') hierarchy.i20 = (*p - '0'), ++p;
         // clang-format on
     }
-    constexpr explicit Z7Index(std::string_view str)
-        : Z7Index(str.data())
-    {}
+    constexpr explicit Z7Index(std::string_view str) : Z7Index(str.data()) {}
 
     constexpr explicit Z7Index(uint64_t idx) : index(idx) {}
-    constexpr Z7Index(const Z7Index& other) : index(other.index) {}
-    constexpr Z7Index(Z7Index&& other) noexcept : index(other.index) {}
+    constexpr Z7Index(const Z7Index &other) : index(other.index) {}
+    constexpr Z7Index(Z7Index &&other) noexcept : index(other.index) {}
 
-    constexpr Z7Index& operator=(const Z7Index& other) { index = other.index; return *this; }
-    constexpr Z7Index& operator=(Z7Index&& other) noexcept { index = other.index; return *this; }
+    constexpr Z7Index &operator=(const Z7Index &other) {
+        index = other.index;
+        return *this;
+    }
+    constexpr Z7Index &operator=(Z7Index &&other) noexcept {
+        index = other.index;
+        return *this;
+    }
 
     // maybe there is a better way to do it.
     // not used yet, but we should use it.
@@ -118,9 +137,7 @@ struct Z7Index {
 
     // Determine the resolution based on the index. Because unused hierarchy levels are filled, we look for the first
     // zero.
-    constexpr int resolution() const {
-        return hierarchy.i01 == 7 ? 0 : 20 - (Utils::countr_one(index) / 3);
-    }
+    constexpr int resolution() const { return hierarchy.i01 == 7 ? 0 : 20 - (Utils::countr_one(index) / 3); }
 
     friend constexpr bool operator==(const Z7Index &lhs, const Z7Index &rhs) { return lhs.index == rhs.index; }
     friend constexpr bool operator!=(const Z7Index &lhs, const Z7Index &rhs) { return lhs.index != rhs.index; }
@@ -164,22 +181,20 @@ constexpr size_t first_non_zero(const Z7Index &f) {
     return (Utils::countl_zero(f.index & base_mask) - 4) / 3 + 1;
 }
 
-std::array<Z7Index, 6> neighbors(const Z7Index& ref, const Z7Configuration& config);
+std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &config);
 
-template <size_t N>
-Z7Index neighbor(const Z7Index& ref, size_t resolution);
+template<size_t N>
+Z7Index neighbor(const Z7Index &ref, size_t resolution);
 
-extern template Z7Index neighbor<1>(const Z7Index& ref, size_t resolution);
-extern template Z7Index neighbor<2>(const Z7Index& ref, size_t resolution);
-extern template Z7Index neighbor<3>(const Z7Index& ref, size_t resolution);
-extern template Z7Index neighbor<4>(const Z7Index& ref, size_t resolution);
-extern template Z7Index neighbor<5>(const Z7Index& ref, size_t resolution);
-extern template Z7Index neighbor<6>(const Z7Index& ref, size_t resolution);
+extern template Z7Index neighbor<1>(const Z7Index &ref, size_t resolution);
+extern template Z7Index neighbor<2>(const Z7Index &ref, size_t resolution);
+extern template Z7Index neighbor<3>(const Z7Index &ref, size_t resolution);
+extern template Z7Index neighbor<4>(const Z7Index &ref, size_t resolution);
+extern template Z7Index neighbor<5>(const Z7Index &ref, size_t resolution);
+extern template Z7Index neighbor<6>(const Z7Index &ref, size_t resolution);
 
 } // namespace Z7
 
-inline constexpr Z7::Z7Index operator""_Z7(const char *str, std::size_t) {
-    return Z7::Z7Index{str};
-}
+inline constexpr Z7::Z7Index operator""_Z7(const char *str, std::size_t) { return Z7::Z7Index{str}; }
 
 #endif // Z7_LIBRARY_H
