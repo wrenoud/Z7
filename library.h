@@ -18,21 +18,22 @@ struct Z7Configuration {
     std::array<uint8_t, 12> exclusion_zone{2, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5};
 
     // neighbor_zones
-    // first index: GBT direction (1-6)
-    // second index: source cell (the 12 pentagons)
+    // first index: source cell (the 12 pentagons)
+    // second index: GBT direction (1-6)
     // invalid value: 15 (must much the exclusion zone above)
-    std::array<std::array<uint8_t, 6>, 12> neighbor_zones{{{5, 15, 4, 2, 1, 3},
-                                                           {5, 15, 0, 6, 10, 2},
-                                                           {1, 15, 0, 7, 6, 3},
-                                                           {2, 15, 0, 8, 7, 4},
-                                                           {3, 15, 0, 9, 8, 5},
-                                                           {4, 15, 0, 10, 9, 1},
-                                                           {10, 2, 1, 11, 15, 7},
-                                                           {6, 3, 2, 11, 15, 8},
-                                                           {7, 4, 3, 11, 15, 9},
-                                                           {8, 5, 4, 11, 15, 10},
-                                                           {9, 1, 5, 11, 15, 6},
-                                                           {9, 6, 10, 8, 15, 7}}};
+    std::array<std::array<uint8_t, 6>, 12> neighbor_zones{{{5, 0, 4, 2, 1, 3}, // 00
+                                                           {5, 0, 0, 6, 10, 2}, // 01
+                                                           {1, 0, 0, 7, 6, 3}, // 02
+                                                           {2, 0, 0, 8, 7, 4}, // 03
+                                                           {3, 0, 0, 9, 8, 5}, // 04
+                                                           {4, 0, 0, 10, 9, 1}, // 05
+                                                           {10, 2, 1, 11, 11, 7}, // 06
+                                                           {6, 3, 2, 11, 11, 8}, // 07
+                                                           {7, 4, 3, 11, 11, 9}, // 08
+                                                           {8, 5, 4, 11, 11, 10}, // 09
+                                                           {9, 1, 5, 11, 11, 6}, // 10
+                                                           {9, 6, 10, 8, 11, 7}}}; // 11
+    std::array<uint8_t, 12> rotations{0, 5, 0, 1, 3, 4, 5, 4, 3, 1, 0, 0};
 };
 
 struct Z7Index {
@@ -183,15 +184,21 @@ constexpr size_t first_non_zero(const Z7Index &f) {
 
 std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &config);
 
-template<size_t N>
-Z7Index neighbor(const Z7Index &ref, size_t resolution);
+struct Z7_carry {
+    Z7Index z7;
+    uint8_t carry;
+};
 
-extern template Z7Index neighbor<1>(const Z7Index &ref, size_t resolution);
-extern template Z7Index neighbor<2>(const Z7Index &ref, size_t resolution);
-extern template Z7Index neighbor<3>(const Z7Index &ref, size_t resolution);
-extern template Z7Index neighbor<4>(const Z7Index &ref, size_t resolution);
-extern template Z7Index neighbor<5>(const Z7Index &ref, size_t resolution);
-extern template Z7Index neighbor<6>(const Z7Index &ref, size_t resolution);
+
+template<size_t N>
+Z7_carry neighbor(const Z7Index &ref, size_t resolution);
+
+extern template Z7_carry neighbor<1>(const Z7Index &ref, size_t resolution);
+extern template Z7_carry neighbor<2>(const Z7Index &ref, size_t resolution);
+extern template Z7_carry neighbor<3>(const Z7Index &ref, size_t resolution);
+extern template Z7_carry neighbor<4>(const Z7Index &ref, size_t resolution);
+extern template Z7_carry neighbor<5>(const Z7Index &ref, size_t resolution);
+extern template Z7_carry neighbor<6>(const Z7Index &ref, size_t resolution);
 
 } // namespace Z7
 

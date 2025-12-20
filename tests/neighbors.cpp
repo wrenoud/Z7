@@ -3496,8 +3496,9 @@ TEST(Neighbors, All) {
         const auto neighbors = Z7::neighbors(cellIndex, defaultConfig);
         for (auto &expected_neighbor: expected_neighbors) {
             // TODO : Remove this check when cross-zone neighbors are supported
-            if (cellIndex.hierarchy.base != expected_neighbor.hierarchy.base)
-                continue; // Skip neighbors that are in a different base hierarchy
+            if (cellIndex.hierarchy.base != expected_neighbor.hierarchy.base &&
+                (cellIndex.hierarchy.base == 0 || cellIndex.hierarchy.base == 11))
+                continue; // Skip neighbors that are in a different base hierarchy from the poles
 
             auto it = std::find(neighbors.begin(), neighbors.end(), expected_neighbor);
             if (it == neighbors.end()) {

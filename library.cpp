@@ -5,8 +5,8 @@
 
 #include <array>
 #include <iostream>
-#include <tuple>
 #include <sstream>
+#include <tuple>
 
 void hello() { std::cout << "Hello, World!" << std::endl; }
 
@@ -135,9 +135,9 @@ Z7Index operator+(const Z7Index &a, const Z7Index &b) {
 
 // Because we're adding a single known digit we can optimize the addition. This is just a very specific case of above.
 template<size_t N>
-Z7Index neighbor(const Z7Index &ref, size_t resolution) {
+Z7_carry neighbor(const Z7Index &ref, size_t resolution) {
     static_assert(0 < N && N < 7, "N must be in 1..6");
-    Z7Index res{ref};
+    Z7_carry res{ref, 0};
 
     // Add the direction digit.
     const auto v = ref[resolution];
@@ -147,7 +147,7 @@ Z7Index neighbor(const Z7Index &ref, size_t resolution) {
         std::tie(carry, r0) = GBT::Addition::CCW::lookup(v, N);
     else
         std::tie(carry, r0) = GBT::Addition::CW::lookup(v, N);
-    res[resolution] = r0;
+    res.z7[resolution] = r0;
     if (carry == 0)
         return res;
 
@@ -158,24 +158,25 @@ Z7Index neighbor(const Z7Index &ref, size_t resolution) {
             std::tie(carry, r0) = GBT::Addition::CCW::lookup(v, carry);
         else
             std::tie(carry, r0) = GBT::Addition::CW::lookup(v, carry);
-        res[i] = r0;
+        res.z7[i] = r0;
         if (carry == 0)
             return res;
     }
 
     // If we still have a carry after handling all digits then we're out of bounds.
     if (carry != 0) {
-        return Z7Index(std::numeric_limits<uint64_t>::max());
+        res.carry = carry;
+        // res.hierarchy.base = 15; // invalid base zone. Leave the rest, that can be useful.
     }
     return res;
 }
 
-template Z7Index neighbor<1>(const Z7Index& ref, size_t resolution);
-template Z7Index neighbor<2>(const Z7Index& ref, size_t resolution);
-template Z7Index neighbor<3>(const Z7Index& ref, size_t resolution);
-template Z7Index neighbor<4>(const Z7Index& ref, size_t resolution);
-template Z7Index neighbor<5>(const Z7Index& ref, size_t resolution);
-template Z7Index neighbor<6>(const Z7Index& ref, size_t resolution);
+template Z7_carry neighbor<1>(const Z7Index &ref, size_t resolution);
+template Z7_carry neighbor<2>(const Z7Index &ref, size_t resolution);
+template Z7_carry neighbor<3>(const Z7Index &ref, size_t resolution);
+template Z7_carry neighbor<4>(const Z7Index &ref, size_t resolution);
+template Z7_carry neighbor<5>(const Z7Index &ref, size_t resolution);
+template Z7_carry neighbor<6>(const Z7Index &ref, size_t resolution);
 
 std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &config) {
     constexpr uint8_t size = 6;
@@ -192,10 +193,30 @@ std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &conf
         return result;
     }
 
-    // create the neigbors
-    std::array<Z7Index, size> result = {neighbor<1>(ref, resolution), neighbor<2>(ref, resolution),
-                                        neighbor<3>(ref, resolution), neighbor<4>(ref, resolution),
-                                        neighbor<5>(ref, resolution), neighbor<6>(ref, resolution)};
+    // create the neighbors
+    std::array<Z7_carry, size> result_carry = {neighbor<1>(ref, resolution), neighbor<2>(ref, resolution),
+                                               neighbor<3>(ref, resolution), neighbor<4>(ref, resolution),
+                                               neighbor<5>(ref, resolution), neighbor<6>(ref, resolution)};
+    for (auto &r: result_carry) {
+        if (r.carry != 0) {
+            r.z7.hierarchy.base = config.neighbor_zones[ref.hierarchy.base][r.carry - 1];
+            if (r.z7.hierarchy.base == 0 || r.z7.hierarchy.base == 11) {
+                // coming from tropical zone to polar zone 0. Rotate the neighbors
+                auto rotations = config.rotations[ref.hierarchy.base];
+                if (ref.hierarchy.i01 == 6 || ref.hierarchy.i01 == 1)
+                    rotations++;
+                for (int j = 0; j < rotations; j++) {
+                    for (int i = 1; i <= resolution; i++) {
+                        r.z7[i] = (*r.z7[i] * 5) % 7;
+                    }
+                }
+            }
+        }
+    }
+    std::array<Z7Index, size> result{
+            result_carry[0].z7, result_carry[1].z7, result_carry[2].z7,
+            result_carry[3].z7, result_carry[4].z7, result_carry[5].z7,
+    };
 
     // if we are in a penthagon we invalidate one neighbor here.
     const uint64_t data_only = (ref.index & ~(0b1111ULL << (20 * 3))) >> (3 * (20 - resolution));
