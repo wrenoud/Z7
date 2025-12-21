@@ -247,3 +247,46 @@ TEST(Z7Index, neighbors_pentagon) {
     EXPECT_EQ(Z7::Z7Index::invalid(), neig[4]);
     EXPECT_EQ("0806"_Z7, neig[5]);
 }
+TEST(Z7Index, zerozero) {
+    const auto a = "00"_Z7;
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("05"_Z7, neig[0]);
+    EXPECT_EQ(Z7::Z7Index::invalid(), neig[1]);
+    EXPECT_EQ("04"_Z7, neig[2]);
+    EXPECT_EQ("02"_Z7, neig[3]);
+    EXPECT_EQ("01"_Z7, neig[4]);
+    EXPECT_EQ("03"_Z7, neig[5]);
+}
+
+TEST(Z7Index, center1) {
+    const auto a = "090"_Z7;
+    EXPECT_EQ(1, a.resolution());
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("091"_Z7, neig[0]);
+    EXPECT_EQ(Z7::Z7Index::invalid(), neig[4]);
+    EXPECT_EQ("096"_Z7, neig[5]);
+    EXPECT_EQ(2, Z7::first_non_zero(a));
+    EXPECT_EQ(1, Z7::first_non_zero(neig[5]));
+}
+
+TEST(Z7Index, center19) {
+    const auto a = "090000000000000000000"_Z7;
+    EXPECT_EQ(19, a.resolution());
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("090000000000000000001"_Z7, neig[0]);
+    EXPECT_EQ(Z7::Z7Index::invalid(), neig[4]);
+    EXPECT_EQ("090000000000000000006"_Z7, neig[5]);
+    EXPECT_EQ(20, Z7::first_non_zero(a));
+    EXPECT_EQ(19, Z7::first_non_zero(neig[5]));
+}
+
+TEST(Z7Index, center20) {
+    const auto a = "0900000000000000000000"_Z7;
+    EXPECT_EQ(20, a.resolution());
+    const auto neig = Z7::neighbors(a, Z7::Z7Configuration{});
+    EXPECT_EQ("0900000000000000000001"_Z7, neig[0]);
+    EXPECT_EQ(Z7::Z7Index::invalid(), neig[4]);
+    EXPECT_EQ("0900000000000000000006"_Z7, neig[5]);
+    EXPECT_EQ(21, Z7::first_non_zero(a));
+    EXPECT_EQ(20, Z7::first_non_zero(neig[5]));
+}

@@ -185,11 +185,15 @@ std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &conf
     const auto exclusion = config.exclusion_zone[ref.hierarchy.base];
 
     // base only
-    if (ref.hierarchy.i01 == 7) {
-        // this is a special case. The return depends on the config data.
-        // TODO
+    if (resolution == 0) {
+        // this is a special case. The return depends only on the config data.
         std::array<Z7Index, size> result;
         result.fill(Z7Index::invalid());
+        for (int i = 0; i < 6; i++) {
+            if (i + 1 != exclusion) {
+                result[i].hierarchy.base = config.neighbor_zones[ref.hierarchy.base][i];
+            }
+        }
         return result;
     }
 
@@ -198,21 +202,23 @@ std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &conf
                                                neighbor<3>(ref, resolution), neighbor<4>(ref, resolution),
                                                neighbor<5>(ref, resolution), neighbor<6>(ref, resolution)};
 
+    // deal with carry, crossing between zones
     for (auto &r: result_carry) {
         if (r.carry != 0) {
             r.z7.hierarchy.base = config.neighbor_zones[ref.hierarchy.base][r.carry - 1];
             if (r.z7.hierarchy.base == 0 || r.z7.hierarchy.base == 11) {
                 // coming from tropical zone to polar zone 0. Rotate the neighbors
                 auto rotations = config.rotations[ref.hierarchy.base];
-                if (ref.hierarchy.i01 == 6 || ref.hierarchy.i01 == 1)
+                if (ref.hierarchy.i01 == 6 || ref.hierarchy.i01 == 1) { // should this be in config?
                     rotations++;
+                }
                 for (int j = 0; j < rotations; j++) {
                     for (int i = 1; i <= resolution; i++) {
                         r.z7[i] = (*r.z7[i] * 5) % 7;
                     }
                 }
             }
-            if ((ref.hierarchy.base == 0 || ref.hierarchy.base == 11) && resolution > 0) {
+            if (ref.hierarchy.base == 0 || ref.hierarchy.base == 11) {
                 auto row = ref.hierarchy.i01;
                 auto col = r.z7.hierarchy.i01;
                 if (ref.hierarchy.base == 11) {
@@ -233,19 +239,18 @@ std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &conf
             result_carry[3].z7, result_carry[4].z7, result_carry[5].z7,
     };
 
-    // if we are in a penthagon we invalidate one neighbor here.
+    // if we are in a pentagon we invalidate one neighbor here.
     const uint64_t data_only = (ref.index & ~(0b1111ULL << (20 * 3))) >> (3 * (20 - resolution));
     if (data_only == 0 && exclusion > 0 && exclusion <= 6) {
         result[exclusion - 1] = Z7Index::invalid();
         return result;
     }
 
-
     // move points out of the exclusion zone
     const auto ref_first_non_zero = first_non_zero(ref);
-    if (ref_first_non_zero < 1)
-        return result; // TODO here we should move to a different face in the dodecahedron, probably earlier in the
-                       // code.
+    if (ref_first_non_zero < 1) {
+        return result; // we should never get where with proper config.
+    }
 
     // find out how we should rotate the cells if needed
     const auto reference_zone = ref[ref_first_non_zero];
