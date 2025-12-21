@@ -197,6 +197,7 @@ std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &conf
     std::array<Z7_carry, size> result_carry = {neighbor<1>(ref, resolution), neighbor<2>(ref, resolution),
                                                neighbor<3>(ref, resolution), neighbor<4>(ref, resolution),
                                                neighbor<5>(ref, resolution), neighbor<6>(ref, resolution)};
+
     for (auto &r: result_carry) {
         if (r.carry != 0) {
             r.z7.hierarchy.base = config.neighbor_zones[ref.hierarchy.base][r.carry - 1];
@@ -205,6 +206,14 @@ std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &conf
                 auto rotations = config.rotations[ref.hierarchy.base];
                 if (ref.hierarchy.i01 == 6 || ref.hierarchy.i01 == 1)
                     rotations++;
+                for (int j = 0; j < rotations; j++) {
+                    for (int i = 1; i <= resolution; i++) {
+                        r.z7[i] = (*r.z7[i] * 5) % 7;
+                    }
+                }
+            }
+            if (ref.hierarchy.base == 0 && resolution > 0) {
+                auto rotations = config.pole_0_rotations[ref.hierarchy.i01 - 1][r.z7.hierarchy.i01 - 1];
                 for (int j = 0; j < rotations; j++) {
                     for (int i = 1; i <= resolution; i++) {
                         r.z7[i] = (*r.z7[i] * 5) % 7;

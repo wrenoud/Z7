@@ -21,7 +21,7 @@ struct Z7Configuration {
     // first index: source cell (the 12 pentagons)
     // second index: GBT direction (1-6)
     // invalid value: 15 (must much the exclusion zone above)
-    std::array<std::array<uint8_t, 6>, 12> neighbor_zones{{{5, 0, 4, 2, 1, 3}, // 00
+    std::array<std::array<uint8_t, 6>, 12> neighbor_zones{{{5, 4, 4, 2, 1, 3}, // 00
                                                            {5, 0, 0, 6, 10, 2}, // 01
                                                            {1, 0, 0, 7, 6, 3}, // 02
                                                            {2, 0, 0, 8, 7, 4}, // 03
@@ -34,6 +34,24 @@ struct Z7Configuration {
                                                            {9, 1, 5, 11, 11, 6}, // 10
                                                            {9, 6, 10, 8, 11, 7}}}; // 11
     std::array<uint8_t, 12> rotations{0, 5, 0, 1, 3, 4, 5, 4, 3, 1, 0, 0};
+
+    // multiply by 5 that number of times, based on origin and index1 of result in pole 0
+    std::array<std::array<uint8_t, 6>, 6> pole_0_rotations{{{0, 1, 0, 1, 0, 2},
+                                                            {0, 0, 0, 0, 0, 0},
+                                                            {0, 0, 0, 3, 2, 2},
+                                                            {5, 5, 0, 0, 0, 0},
+                                                            {0, 1, 0, 0, 0, 0},
+                                                            {5, 0, 4, 0, 4, 0}}};
+
+    // The positions on each row of pole_0_rotations are computed as the
+    // row + column from pole_0_rotations_generator added using GBT::Addition::CW::addition_table_0
+    // std::array<std::array<uint8_t, 6>, 6> pole_0_rotations_generator{
+    //         {{1, 0, 2, 0, 1, 0},
+    //          {0, 0, 3, 0, 0, 4}, // not used. There just for symmetry
+    //          {2, 3, 2, 0, 0, 0},
+    //          {0, 0, 0, 5, 0, 5},
+    //          {1, 0, 0, 0, 0, 0},
+    //          {0, 4, 0, 5, 0, 4}}};
 };
 
 struct Z7Index {

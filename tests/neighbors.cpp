@@ -4003,7 +4003,7 @@ TEST(Neighbors, Level2) {
     int failures = 0;
     int testCount = 1;
 
-    auto testData = GetParsedTestData(neighborTestDataLevel3, std::size(neighborTestDataLevel2));
+    auto testData = GetParsedTestData(neighborTestDataLevel2, std::size(neighborTestDataLevel2));
 
     for (auto &[cellIndex, expected_neighbors]: testData) {
         const auto neighbors = Z7::neighbors(cellIndex, defaultConfig);
