@@ -212,8 +212,14 @@ std::array<Z7Index, 6> neighbors(const Z7Index &ref, const Z7Configuration &conf
                     }
                 }
             }
-            if (ref.hierarchy.base == 0 && resolution > 0) {
-                auto rotations = config.pole_0_rotations[ref.hierarchy.i01 - 1][r.z7.hierarchy.i01 - 1];
+            if ((ref.hierarchy.base == 0 || ref.hierarchy.base == 11) && resolution > 0) {
+                auto row = ref.hierarchy.i01;
+                auto col = r.z7.hierarchy.i01;
+                if (ref.hierarchy.base == 11) {
+                    row = 7 - row;
+                    col = 7 - col;
+                }
+                auto rotations = config.pole_0_rotations[row - 1][col - 1];
                 for (int j = 0; j < rotations; j++) {
                     for (int i = 1; i <= resolution; i++) {
                         r.z7[i] = (*r.z7[i] * 5) % 7;

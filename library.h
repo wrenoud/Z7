@@ -32,7 +32,7 @@ struct Z7Configuration {
                                                            {7, 4, 3, 11, 11, 9}, // 08
                                                            {8, 5, 4, 11, 11, 10}, // 09
                                                            {9, 1, 5, 11, 11, 6}, // 10
-                                                           {9, 6, 10, 8, 11, 7}}}; // 11
+                                                           {9, 6, 10, 8, 8, 7}}}; // 11
     std::array<uint8_t, 12> rotations{0, 5, 0, 1, 3, 4, 5, 4, 3, 1, 0, 0};
 
     // multiply by 5 that number of times, based on origin and index1 of result in pole 0
