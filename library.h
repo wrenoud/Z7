@@ -4,6 +4,7 @@
 #ifndef Z7_LIBRARY_H
 #define Z7_LIBRARY_H
 
+#include "BitFieldProxy.h"
 #include "util.h"
 
 #include <array>
@@ -133,26 +134,13 @@ struct Z7Index {
     // Calculate the bit shift needed to extract the 3-bit value for a given resolution.
     static constexpr uint64_t resolution_shift(uint64_t res) { return (20 - res) * 3; }
 
-    // Extract the 3-bit index value for the specified resolution.
+    // Extract the 3-bit value for the specified resolution.
     constexpr uint64_t operator[](uint64_t res) const { return (index >> resolution_shift(res)) & 0b111; }
 
-    struct ResolutionProxy {
-        uint64_t &index;
-        uint64_t resolution_shift; ///< Bit shift for the specified resolution. This is a multiple of 3, and is in
-                                   ///< effect a relative offset for the 3 bits.
+    using ProxyType = BitFieldProxy<uint64_t, 0b111>;
 
-        // Assign a new 3-bit value for the specified resolution.
-        constexpr ResolutionProxy &operator=(uint64_t value) {
-            index &= ~(0b111ULL << resolution_shift); // Clear existing bits
-            index |= (value & 0b111) << resolution_shift; // Set new bits (being defensive with the mask)
-            return *this;
-        }
-
-        // Dereference to get the current 3-bit value for the specified resolution.
-        constexpr uint64_t operator*() const { return (index >> resolution_shift) & 0b111; }
-    };
-
-    constexpr ResolutionProxy operator[](uint64_t res) { return {index, resolution_shift(res)}; }
+    // Get a proxy object for assigning the 3-bit value for the specified resolution.
+    constexpr ProxyType operator[](uint64_t res) { return {index, resolution_shift(res)}; }
 
     // Determine the resolution based on the index. Because unused hierarchy levels are filled, we look for the first
     // zero.
