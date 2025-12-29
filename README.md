@@ -20,13 +20,9 @@ For reference purposes a rendering of three hierarchies of alternating GBT rotat
 
 ### GBT Addition
 
-Counter-clockwise rotation between levels:
-
-<img src="./images/neighbors-neighbors-ccw.svg" width="300" alt="Single digit GBT addition with CCW rotation">
-
-Clockwise rotation between levels:
-
-<img src="./images/neighbors-neighbors-cw.svg" width="300" alt="Single digit GBT addition with CW rotation">
+| Counter-clockwise (CCW)                                                                                        | Clockwise (CW)                                                                                               |
+|----------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| <img src="./images/neighbors-neighbors-ccw.svg" width="300" alt="Single digit GBT addition with CCW rotation"> | <img src="./images/neighbors-neighbors-cw.svg" width="300" alt="Single digit GBT addition with CW rotation"> |
 
 ## References
 
