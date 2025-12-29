@@ -137,7 +137,7 @@ struct Z7Index {
     // Extract the 3-bit value for the specified resolution.
     constexpr uint64_t operator[](uint64_t res) const { return (index >> resolution_shift(res)) & 0b111; }
 
-    using ProxyType = BitFieldProxy<uint64_t, 0b111>;
+    using ProxyType = BitFieldProxy<uint64_t, 3>;
 
     // Get a proxy object for assigning the 3-bit value for the specified resolution.
     constexpr ProxyType operator[](uint64_t res) { return {index, resolution_shift(res)}; }
