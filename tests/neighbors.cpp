@@ -3995,6 +3995,18 @@ std::vector<ParsedNeighborTestData> GetParsedTestData(const char *data[], size_t
     }
     return parsedData;
 }
+
+// Helper function to join a container of Z7Index into a string space separated string.
+template <typename T>
+std::ostringstream JoinIndexes(const T &indexes)
+{
+    std::ostringstream indexesStream;
+    for (const auto &n: indexes) {
+        indexesStream << n.str() << " ";
+    }
+    return indexesStream;
+}
+
 } // namespace
 
 
@@ -4010,17 +4022,9 @@ TEST(Neighbors, Level2) {
         for (auto &expected_neighbor: expected_neighbors) {
             auto it = std::find(neighbors.begin(), neighbors.end(), expected_neighbor);
             if (it == neighbors.end()) {
-                std::ostringstream reported_neighbors;
-                for (const auto &n: neighbors) {
-                    reported_neighbors << n.str() << " ";
-                }
-                std::ostringstream expected_neighbors_str;
-                for (const auto &n: expected_neighbors) {
-                    expected_neighbors_str << n.str() << " ";
-                }
                 EXPECT_TRUE(false) << "Cell: " << cellIndex.str()
-                                   << "\n\tReported neighbors: " << reported_neighbors.str()
-                                   << "\n\tExpected neighbors: " << expected_neighbors_str.str();
+                                   << "\n\tReported neighbors: " << JoinIndexes(neighbors).str()
+                                   << "\n\tExpected neighbors: " << JoinIndexes(expected_neighbors).str();
                 ++failures;
                 break;
             }
@@ -4042,17 +4046,9 @@ TEST(Neighbors, Level3) {
         for (auto &expected_neighbor: expected_neighbors) {
             auto it = std::find(neighbors.begin(), neighbors.end(), expected_neighbor);
             if (it == neighbors.end()) {
-                std::ostringstream reported_neighbors;
-                for (const auto &n: neighbors) {
-                    reported_neighbors << n.str() << " ";
-                }
-                std::ostringstream expected_neighbors_str;
-                for (const auto &n: expected_neighbors) {
-                    expected_neighbors_str << n.str() << " ";
-                }
                 EXPECT_TRUE(false) << "Cell: " << cellIndex.str()
-                                   << "\n\tReported neighbors: " << reported_neighbors.str()
-                                   << "\n\tExpected neighbors: " << expected_neighbors_str.str();
+                                   << "\n\tReported neighbors: " << JoinIndexes(neighbors).str()
+                                   << "\n\tExpected neighbors: " << JoinIndexes(expected_neighbors).str();
                 ++failures;
                 break;
             }
