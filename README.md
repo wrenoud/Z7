@@ -16,7 +16,17 @@ to odd resolutions and CCW to even resolutions.
 
 For reference purposes a rendering of three hierarchies of alternating GBT rotation is included (CW, CCW, CW).
 
-<img src="grid.svg" width="200" alt="3 hierarchies in Z7's alternating GBT pattern">
+<img src="./images/grid.svg" width="200" alt="3 hierarchies in Z7's alternating GBT pattern">
+
+### GBT Addition
+
+Counter-clockwise rotation between levels:
+
+<img src="./images/neighbors-neighbors-ccw.svg" width="300" alt="Single digit GBT addition with CCW rotation">
+
+Clockwise rotation between levels:
+
+<img src="./images/neighbors-neighbors-cw.svg" width="300" alt="Single digit GBT addition with CW rotation">
 
 ## References
 
